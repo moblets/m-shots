@@ -3,8 +3,12 @@ var Nightmare = require('nightmare');
 var CryptoJS = require('crypto-js');
 var Awesome = require("awesome-logs");
 var cli = require('cli');
+var fs = require('fs');
 
-var appId;
+cli.parse({
+  show: ['s', 'show output', 'boolean', false]
+});
+
 var configs = {
     server: "http://m.app.vc/",
     key: "deusehtop",
@@ -48,7 +52,7 @@ var configs = {
     wait: 5000
 };
 
-var getPageDefinitions = function(callback) {
+var getPageDefinitions = function(appId, callback) {
     var url = configs.server + 'id/' + appId;
     Awesome.success('loading app data from url: ' + url);
     var lsKey = url + ":pages-definitions";
@@ -70,14 +74,14 @@ var getPageDefinitions = function(callback) {
     });
 };
 
-var routine = function(pages, viewport, useragent, show, callback) {
+var routine = function(appId, pages, viewport, useragent, show, callback) {
     Awesome.alert('taking ' + viewport + ' screenshots...');
     var url = configs.server + '/id/' + appId;
     var label = configs.viewport[viewport].label;
     var page1 = pages[0].pages[0].id,
 		page2 = pages[0].pages[1] !== undefined ? pages[0].pages[1].id : false,
         page3 = pages[0].pages[2] !== undefined ? pages[0].pages[2].id : false;
-
+    Awesome.alert('taking ' + viewport + ' screenshots...');
     // attention: for mac book with retina screens, divide zoomFactor, width and height by 2
     var night = Nightmare({
         show: show,
@@ -92,20 +96,20 @@ var routine = function(pages, viewport, useragent, show, callback) {
     .wait('#close button')
     .click('#close button')
     .wait(configs.wait)
-    .screenshot(process.cwd() + configs.output + label + '-page0-home.png');
+    .screenshot(configs.output + label + '-page0-home.png');
 
     night.evaluate(function(page) {
         window.location.hash = "#/moblet/" + page + "/";
     }, page1)
     .wait(configs.wait)
-    .screenshot(process.cwd() + configs.output + label + '-page1-' + page1 + '.png');
+    .screenshot(configs.output + label + '-page1-' + page1 + '.png');
 
 	if (page2) {
 	    night.evaluate(function(page) {
 	        window.location.hash = "#/moblet/" + page + "/";
 	    }, page2)
 	    .wait(configs.wait)
-	    .screenshot(process.cwd() + configs.output + label + '-page2-' + page2 + '.png');
+	    .screenshot(configs.output + label + '-page2-' + page2 + '.png');
 	}
 	
 	if (page3) {
@@ -113,7 +117,7 @@ var routine = function(pages, viewport, useragent, show, callback) {
         window.location.hash = "#/moblet/" + page + "/";
     }, page3)
     .wait(configs.wait)
-    .screenshot(process.cwd() + configs.output + label + '-page3-' + page3 + '.png');
+    .screenshot(configs.output + label + '-page3-' + page3 + '.png');
 	}
 
   night.end()
@@ -136,11 +140,14 @@ cli.main(function(args, options) {
     Awesome.row();
   }
   
-  getPageDefinitions(function(pages) {
-      routine(pages, 'ios-35', 'ios', false, function() {
-          routine(pages, 'ios-4', 'ios', false, function() {
-              routine(pages, 'ios-47', 'ios', false, function() {
-                  routine(pages, 'ios-55', 'ios', false, function() {
+  getPageDefinitions(appId, function(pages) {
+      if (!fs.existsSync(configs.output)){
+          fs.mkdirSync(configs.output);
+      }
+      routine(appId, pages, 'ios-35', 'ios', options.show, function() {
+          routine(appId, pages, 'ios-4', 'ios', options.show, function() {
+              routine(appId, pages, 'ios-47', 'ios', options.show, function() {
+                  routine(appId, pages, 'ios-55', 'ios', options.show, function() {
                       Awesome.row();
                       Awesome.success('screenshot process finished successfully!');
                       Awesome.row();
