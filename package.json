@@ -1,0 +1,16 @@
+{
+  "name": "m-shots",
+  "version": "1.0.0",
+  "description": "takes screenshots of base-ionic-project",
+  "main": "screens.js ",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Leonardo @leualemax Ferreira <leualemax@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "awesome-logs": "^1.0.5",
+    "crypto-js": "^3.1.6",
+    "nightmare": "^2.4.0"
+  }
+}
