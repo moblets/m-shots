@@ -4,6 +4,7 @@ var CryptoJS = require('crypto-js');
 var Awesome = require("awesome-logs");
 var cli = require('cli');
 
+var appId;
 var configs = {
     server: "http://m.app.vc/",
     key: "deusehtop",
