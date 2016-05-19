@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 var Nightmare = require('nightmare');
 var CryptoJS = require('crypto-js');
 var Awesome = require("awesome-logs");
