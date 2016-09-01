@@ -10,7 +10,7 @@ cli.parse({
 });
 
 var configs = {
-    server: "http://m.app.vc/",
+    server: "http://localhost:3000/",
     key: "deusehtop",
     output: "screenshots/",
     user_agent: {
@@ -49,13 +49,13 @@ var configs = {
           label: 'android'
         }
     },
-    wait: 5000
+    wait: 10000
 };
 
 var getPageDefinitions = function(appId, callback) {
     var url = configs.server + 'id/' + appId;
     Awesome.success('loading app data from url: ' + url);
-    var lsKey = url + ":pages-definitions";
+    var lsKey = appId + ":pages-definitions";
     Nightmare({
         show: false
     })
@@ -76,7 +76,7 @@ var getPageDefinitions = function(appId, callback) {
 
 var routine = function(appId, pages, viewport, useragent, show, callback) {
     Awesome.alert('taking ' + viewport + ' screenshots...');
-    var url = configs.server + '/id/' + appId;
+    var url = configs.server + 'id/' + appId;
     var label = configs.viewport[viewport].label;
     var page1 = pages[0].pages[0].id,
 		page2 = pages[0].pages[1] !== undefined ? pages[0].pages[1].id : false,
@@ -86,9 +86,9 @@ var routine = function(appId, pages, viewport, useragent, show, callback) {
     var night = Nightmare({
         show: show,
         frame: false,
-        webPreferences: {zoomFactor: configs.viewport[viewport].zoomFactor},
-        width: configs.viewport[viewport].width,
-        height: configs.viewport[viewport].height
+        webPreferences: {zoomFactor: configs.viewport[viewport].zoomFactor/2},
+        width: configs.viewport[viewport].width/2,
+        height: configs.viewport[viewport].height/2
     });
 
     night.useragent(configs.user_agent[useragent])
