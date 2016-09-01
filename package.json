@@ -1,6 +1,6 @@
 {
   "name": "m-shots",
-  "version": "1.0.31",
+  "version": "1.0.4",
   "description": "takes screenshots of base-ionic-project",
   "main": "screens.js ",
   "scripts": {
